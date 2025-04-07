@@ -15,7 +15,7 @@ RUN pip install --upgrade pip
 
 # ⚙️ Cài PyTorch CPU-only (bản chính thức không có CUDA)
 RUN pip install --no-cache-dir \
-    torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1
+    torch==2.5.1 torchvision==0.20.1 
 
 # Copy và xử lý requirements.txt (loại bỏ torch*)
 COPY requirements.txt .
