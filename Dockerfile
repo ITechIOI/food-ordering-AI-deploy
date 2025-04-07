@@ -1,8 +1,10 @@
+# Bắt đầu từ image python slim
 FROM python:3.11-slim
 
+# Đặt thư mục làm việc
 WORKDIR /app
 
-# Tối ưu: Cài pip + thư viện hệ thống cần thiết
+# Cài các thư viện hệ thống cần thiết cho việc build
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential gcc libffi-dev libssl-dev curl && \
     rm -rf /var/lib/apt/lists/*
@@ -10,19 +12,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Cập nhật pip
 RUN pip install --upgrade pip
 
-# Cài torch CUDA 12.4 từ index riêng của PyTorch
+# Cài đặt PyTorch và các gói liên quan với CUDA 11.3 từ PyTorch index
 RUN pip install --no-cache-dir \
-    torch==2.5.1+cu124 torchvision==0.20.1+cu124 torchaudio==2.5.1+cu124 \
-    --index-url https://download.pytorch.org/whl/cu124
+    torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0 \
+    --index-url https://download.pytorch.org/whl/cu113
 
-# Copy requirements và cài các gói khác (bỏ torch ra khỏi requirements.txt trước!)
+# Copy file requirements.txt trước khi cài đặt dependencies
 COPY requirements.txt .
 
+# Cài đặt các dependencies từ requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
+# Copy toàn bộ source code vào image
 COPY . .
 
+# Mở port 8000 cho ứng dụng
 EXPOSE 8000
 
+# Chạy ứng dụng với uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
