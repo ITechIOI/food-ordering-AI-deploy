@@ -1,0 +1,59 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# ===== Virtual Environment =====
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+.ENV.bak/
+env.bak/
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ===== Log / Temp Files =====
+*.log
+*.tmp
+*.temp
+
+# ===== System Files =====
+.DS_Store
+Thumbs.db
+
+# ===== Database / Storage =====
+*.sqlite3
+*.db
+*.sqlite
+
+# ===== Test Caches =====
+.pytest_cache/
+coverage/
+htmlcov/
+.tox/
+
+# ===== Environment Variables =====
+.env
+.env.*
+
+# ===== Docker =====
+*.pid
+docker-compose.override.yml
+
+# ===== FastAPI Specific (nếu có) =====
+static/uploads/
+static/tmp/
+
+seeding_pinecone.py
+docker-compose.yaml
