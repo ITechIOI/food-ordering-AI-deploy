@@ -14,7 +14,7 @@ RUN pip install --upgrade pip
 
 # Cài đặt PyTorch và các gói liên quan với CUDA 11.3 từ PyTorch index
 RUN pip install --no-cache-dir \
-    torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0 \
+    torch==2.0.1+cu113 torchvision==0.15.2+cu113 torchaudio==2.0.2 \
     --index-url https://download.pytorch.org/whl/cu113
 
 # Copy file requirements.txt trước khi cài đặt dependencies
