@@ -13,19 +13,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Cập nhật pip
 RUN pip install --upgrade pip
 
-# Cài PyTorch + CUDA từ repo chính thức
+# ⚙️ Cài PyTorch CPU-only (bản chính thức không có CUDA)
 RUN pip install --no-cache-dir \
-    torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchaudio==2.0.2 \
-    --index-url https://download.pytorch.org/whl/cu118
+    torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1
 
-# Cài các gói khác (trừ torch*)
+# Copy và xử lý requirements.txt (loại bỏ torch*)
 COPY requirements.txt .
-
-# REMOVE TORCH from requirements.txt (nếu còn dòng torch)
 RUN sed -i '/torch/d' requirements.txt && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy toàn bộ mã nguồn (nếu cần để build thêm lib nội bộ)
+# Copy toàn bộ mã nguồn
 COPY . .
 
 # ===================================
@@ -35,7 +32,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy tất cả package từ stage trước
+# Copy toàn bộ dependencies từ stage builder
 COPY --from=builder /usr/local /usr/local
 
 # Copy project source
