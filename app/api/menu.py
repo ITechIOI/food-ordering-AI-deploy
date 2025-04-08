@@ -25,14 +25,14 @@ def convert_matches(matches):
 # Trả về dữ liệu dự đoán có điểm tin cậy - score
 @router.post("/predict/score")
 async def predict_food(file: UploadFile = File(...), limit: int = Form(...)):
-   # print("File: ", file)
-   # print("Limit ", limit)
     if not file.filename.lower().endswith((".jpg", ".jpeg", ".png")):
         raise HTTPException(status_code=400, detail="Invalid file format")
 
     image_bytes = await file.read()
     try:
         embedding = image_to_embedding(image_bytes)
+        embedding = np.array(embedding)
+        print('Embedding: ', embedding)
         pinecone_result = query_pinecone(embedding, top_k=limit)
         matches = pinecone_result["matches"]
         return convert_matches(matches)

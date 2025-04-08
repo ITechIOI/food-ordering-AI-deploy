@@ -57,3 +57,6 @@ static/tmp/
 
 seeding_pinecone.py
 docker-compose.yaml
+app.py
+
+hugging_face/

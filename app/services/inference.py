@@ -1,15 +1,38 @@
-from PIL import Image
-import io
-import torch
-from app.core.clip import model, preprocess, device
+from app.core.config import settings  
+import base64
+import json
+import requests
 
-@torch.no_grad()
 def image_to_embedding(image_bytes: bytes):
-    image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-    image_input = preprocess(image).unsqueeze(0).to(device)
+    encoded_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    with torch.no_grad():
-        image_features = model.encode_image(image_input)
-        image_features /= image_features.norm(dim=-1, keepdim=True)
+    payload = {
+        "model": "jina-clip-v2",
+        "dimensions": 512,
+        "input": [
+            {
+                "image": encoded_image
+            },
+        ],
+        "embedding_type": "float",
+        "normalized": True
+    }
 
-    return image_features.cpu().numpy()[0]
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {settings.JINA_API_TOKEN}",
+    }
+
+    response = requests.post("https://api.jina.ai/v1/embeddings", headers=headers, data=json.dumps(payload))
+
+    if response.status_code == 200:
+        result = response.json()
+        embedding = result["data"][0].get("embedding")
+        if not embedding:
+            raise ValueError("❌ Không có embedding trả về.")
+        return embedding
+    else:
+        print(f"❌ API trả về lỗi {response.status_code}")
+        print(response.text)
+        return None
+

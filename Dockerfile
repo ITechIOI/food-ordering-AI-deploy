@@ -13,14 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Cập nhật pip
 RUN pip install --upgrade pip
 
-# ⚙️ Cài PyTorch CPU-only (bản chính thức không có CUDA)
-RUN pip install --no-cache-dir \
-    torch==2.5.1 torchvision==0.20.1 
-
-# Copy và xử lý requirements.txt (loại bỏ torch*)
+# Sao chép requirements.txt và cài các gói (không cần lọc torch nữa nếu đã bỏ khỏi file)
 COPY requirements.txt .
-RUN sed -i '/torch/d' requirements.txt && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy toàn bộ mã nguồn
 COPY . .
